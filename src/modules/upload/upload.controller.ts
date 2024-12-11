@@ -1,4 +1,4 @@
-import { Controller, Post, UploadedFile, UseInterceptors, Delete, Body, Get } from '@nestjs/common';
+import { Controller, Post, UploadedFile, UseInterceptors, Delete, Body, Get, Query } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadService } from './upload.service';
 
@@ -8,11 +8,20 @@ export class UploadController {
 
   @Post('image')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadImage(@UploadedFile() file: any) {
-    const result = await this.uploadService.uploadImage(file);
+  async uploadImage(@UploadedFile() file: any, @Body('folder') folder: string) {
+    const result = await this.uploadService.uploadImage(file, folder);
     return {
       url: result.secure_url,
       publicId: result.public_id,
+    };
+  }
+
+  @Get('images')
+  async listImages(@Query('folder') folder?: string) {
+    const images = await this.uploadService.listImages(folder);
+    return {
+      message: 'Images retrieved successfully',
+      images,
     };
   }
 
