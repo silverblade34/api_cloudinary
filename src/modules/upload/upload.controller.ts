@@ -19,6 +19,6 @@ export class UploadController {
   @Delete('image')
   async deleteImage(@Body('publicId') publicId: string) {
     const result = await this.uploadService.deleteImage(publicId);
-    return { message: 'Image deleted successfully', result };
+    return { message: 'Image deleted successfully', result: result.result };
   }
 }
